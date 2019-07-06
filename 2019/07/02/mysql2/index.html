@@ -1,0 +1,244 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="几乎所有的事情都具有多面性"><title>mysql知识浅析2 | 向阳成长</title><link rel="stylesheet" type="text/css" href="//fonts.loli.net/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.3"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.3"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">mysql知识浅析2</h1><a id="logo" href="/.">向阳成长</a><p class="description">个人博客</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="搜索"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">mysql知识浅析2</h1><div class="post-meta"><a href="/2019/07/02/mysql2/#comments" class="comment-count"></a><p><span class="date">Jul 02, 2019</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><h1 id="1-多表之间的关系"><a href="#1-多表之间的关系" class="headerlink" title="1. 多表之间的关系"></a>1. 多表之间的关系</h1><h3 id="1-1-分类"><a href="#1-1-分类" class="headerlink" title="1.1 分类"></a>1.1 分类</h3><ul>
+<li>​    一对一<ul>
+<li>人和身份证</li>
+<li>分析：一个人只有一个身份证，一个身份证只能对应一个人</li>
+</ul>
+</li>
+<li>​    一对多（多对一）<ul>
+<li>部门和员工</li>
+<li>分析：一个部门有多个员工，一个员工只能对应一个部门</li>
+</ul>
+</li>
+<li>​    多对多<ul>
+<li>学生和课程</li>
+<li>分析：一个学生可以选择多门课程，一个课程可以被很多学生选择</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-2-实现关系"><a href="#1-2-实现关系" class="headerlink" title="1.2 实现关系"></a>1.2 实现关系</h3><ul>
+<li>​    一对多（多对一）<ul>
+<li>如：部门和员工</li>
+<li><strong>实现方式：在多的一方建立外键，指向一的一方的主键</strong></li>
+</ul>
+</li>
+</ul>
+<p><img src="/2019/07/02/mysql2/一对多关系实现.bmp" alt></p>
+<ul>
+<li>多对多<ul>
+<li>如：学生和课程</li>
+<li><strong>实现方式：多对多的关系实现需要借助第三张中间表，中间表至少包含两个字段，这两个字段作为第三张表的外键，分别指向两张表的主键。</strong></li>
+</ul>
+</li>
+</ul>
+<p><img src="/2019/07/02/mysql2/多对多关系实现.bmp" alt></p>
+<ul>
+<li>一对一<ul>
+<li>人和身份证</li>
+<li><strong>实现方式：可以在任意一方添加唯一外键指向另一方的主键</strong></li>
+</ul>
+</li>
+</ul>
+<p><img src="/2019/07/02/mysql2/一对一关系实现.bmp" alt></p>
+<h1 id="2-范式"><a href="#2-范式" class="headerlink" title="2. 范式"></a>2. 范式</h1><h3 id="2-1-概念"><a href="#2-1-概念" class="headerlink" title="2.1 概念"></a>2.1 概念</h3><p>​    设计数据库的时候需要遵守的一些规范。</p>
+<p>​    设计关系数据库的时候，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余度越小</p>
+<h3 id="2-2-分类"><a href="#2-2-分类" class="headerlink" title="2.2 分类"></a>2.2 分类</h3><p>​    目前关系型数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式（4NF）以及第五范式（5NF），也被称为完美范式。</p>
+<ul>
+<li>第一范式（1NF）：每一项都是不可再分的原子数据项</li>
+<li>第二范式（2NF）：在1NF的基础上，非码属性完全依赖于码属性（在1NF的基础上消除了非主属性对主码的部分函数依赖）</li>
+<li>第三范式（3NF）：在2NF的基础上，任何非主属性不依赖于其他非主属性（在2NF基础上消除了传递依赖） </li>
+</ul>
+<p><strong>相关的几个概念：</strong></p>
+<ul>
+<li>函数依赖：A–&gt;B    通过A属性（属性组）的值可以唯一确定B属性的值。<ul>
+<li>学号–&gt;姓名    （学号，课程名）–&gt;分数</li>
+</ul>
+</li>
+<li>完全函数依赖：A–&gt;B    B属性的值确定需要依赖于A属性组全部的值。<ul>
+<li>（学号，课程名）–&gt;分数</li>
+</ul>
+</li>
+<li>部分函数依赖：A–&gt;B    B属性的值确定需要依赖于A属性组部分的值。<ul>
+<li>（学号，课程名）–&gt;姓名</li>
+</ul>
+</li>
+<li>传递函数依赖：A–&gt;B,B–&gt;C    通过A属性（属性组）的值可以为一确定B属性的值，再通过B属性（属性组）的值可以唯一确定C属性的值，则称C传递函数依赖于A<ul>
+<li>学号–&gt;系名称，系名称–&gt;系主任</li>
+</ul>
+</li>
+<li>码：如果在一张表中，一个属性或者属性组被其他所有属性完全依赖，就称这个属性（属性组）是该表的码<ul>
+<li>主属性：码属性组中的所有属性</li>
+<li>非主属性：其他除了码属性组的属性</li>
+</ul>
+</li>
+</ul>
+<p>​    </p>
+<h1 id="3-多表查询"><a href="#3-多表查询" class="headerlink" title="3. 多表查询"></a>3. 多表查询</h1><h3 id="3-1-笛卡尔积"><a href="#3-1-笛卡尔积" class="headerlink" title="3.1 笛卡尔积"></a>3.1 笛卡尔积</h3><p>​    有两个集合A,B，取这两个集合的所有组成情况。</p>
+<h3 id="3-2-内连接查询"><a href="#3-2-内连接查询" class="headerlink" title="3.2 内连接查询"></a>3.2 内连接查询</h3><ul>
+<li><p>隐式内连接：使用where条件消除无用数据</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">查询所有员工信息和对应部门信息</span><br><span class="line">	SELECT * FROM emp,dept WHERE emp.`dept_id` = dept.`id`;</span><br><span class="line">查询员工表的名称，性别，部门表的名称</span><br><span class="line">	SELECT emp.`name`,emp.`gender`,dept.`name` FROM emp,dept WHERE emp.`dept_id` = dept.`id`;</span><br><span class="line">	</span><br><span class="line">	SELECT </span><br><span class="line">        t1.name,</span><br><span class="line">        t1.gender,</span><br><span class="line">        t2.name</span><br><span class="line">	FROM </span><br><span class="line">        emp t1,</span><br><span class="line">        dept t2</span><br><span class="line">	WHERE</span><br><span class="line">		t1.dept_id=t2.id;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>显式内连接</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select 字段列表 from 表名1 [inner] join 表名2 on 条件</span><br><span class="line"></span><br><span class="line">	select * from emp inner join dept on emp.dept_id = dept.id;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="3-3-外连接查询"><a href="#3-3-外连接查询" class="headerlink" title="3.3 外连接查询"></a>3.3 外连接查询</h3><ul>
+<li><p>左外连接：查询的是左表所有记录（表1）以及其交集部分（on条件判断）</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">select 字段列表 from 表1 left [outer] join 表2 on 条件</span><br><span class="line"></span><br><span class="line">	SELECT </span><br><span class="line">        t1.*,</span><br><span class="line">        t2.name</span><br><span class="line">	FROM </span><br><span class="line">        emp t1,</span><br><span class="line"> 	LEFT JOIN</span><br><span class="line">        dept t2</span><br><span class="line">	ON</span><br><span class="line">		t1.dept_id=t2.id;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>右外连接：查询的是右表所有记录（表2）以及其交集部分（on条件判断）</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">select 字段列表 from 表1 left [outer] join 表2 on 条件</span><br><span class="line"></span><br><span class="line">	SELECT </span><br><span class="line">        t1.*,</span><br><span class="line">        t2.name</span><br><span class="line">	FROM </span><br><span class="line">        emp t1,</span><br><span class="line"> 	RIGHT JOIN</span><br><span class="line">        dept t2</span><br><span class="line">	ON</span><br><span class="line">		t1.dept_id=t2.id;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-4-子查询"><a href="#3-4-子查询" class="headerlink" title="3.4 子查询"></a>3.4 子查询</h3><p>​    查询中嵌套查询，称嵌套的查询是子查询。也就是将一条查询语句的结果当做另外一条查询语句的条件。</p>
+<h4 id="3-4-1-子查询的结果是单行单列的"><a href="#3-4-1-子查询的结果是单行单列的" class="headerlink" title="3.4.1 子查询的结果是单行单列的"></a>3.4.1 子查询的结果是单行单列的</h4><ul>
+<li>子查询可以作为条件，使用运算符进行判断。运算符：&gt;   &gt;=  &lt;   &lt;=   =…</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-- 查询工资最高的员工信息</span><br><span class="line">SELECT * FROM emp WHERE emp.salary=(SELECT MAX(salary) FROM emp);</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-2-子查询的结果是多行单列的"><a href="#3-4-2-子查询的结果是多行单列的" class="headerlink" title="3.4.2 子查询的结果是多行单列的"></a>3.4.2 子查询的结果是多行单列的</h4><ul>
+<li>子查询作为条件，使用运算符 IN 进行判断</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-- 查询财务部和市场部的所有员工信息</span><br><span class="line">思路：</span><br><span class="line">    SELECT id FROM dept WHERE NAME=&quot;财务部&quot; OR NAME=&quot;市场部&quot;; -- 查询处部门的id</span><br><span class="line">    SELECT * FROM emp WHERE dept_id =3 OR dept_id=2; -- 查询对应id的所有信息</span><br><span class="line">    SELECT * FROM emp WHERE dept_id IN(2,3); -- 改进</span><br><span class="line">    </span><br><span class="line">成型代码：</span><br><span class="line">	SELECT * FROM emp WHERE dept_id IN(SELECT id FROM dept WHERE NAME=&quot;财务部&quot; OR NAME=&quot;市场部&quot;);</span><br><span class="line">	SELECT * FROM emp WHERE dept_id IN(SELECT id FROM dept WHERE NAME IN (&quot;财务部&quot;,&quot;市场部&quot;));-- 改进</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-3-子查询的结果是多行多列的"><a href="#3-4-3-子查询的结果是多行多列的" class="headerlink" title="3.4.3 子查询的结果是多行多列的"></a>3.4.3 子查询的结果是多行多列的</h4><ul>
+<li>子查询可以作为一张虚拟表，进行一个表的查询</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-- 查询员工入职日期是2011-11-11之后的员工信息和部门信息</span><br><span class="line">	SELECT * FROM dept , (SELECT * FROM dept WHERE emp.`join_date` &gt; &apos;2011-11-11&apos;) AS  dept2 WHERE dept.id = dept2.dept_id;</span><br><span class="line">	</span><br><span class="line">-- 普通内连接查询</span><br><span class="line">	SELECT * FROM emp t1,dept t2 WHERE t1.`dept_id`=t2.`id` AND t1.`join_date`&gt;&apos;2011-11-11&apos;;</span><br></pre></td></tr></table></figure>
+<h1 id="4-事务"><a href="#4-事务" class="headerlink" title="4. 事务"></a>4. 事务</h1><h4 id="4-1-事务的基本介绍"><a href="#4-1-事务的基本介绍" class="headerlink" title="4.1 事务的基本介绍"></a>4.1 事务的基本介绍</h4><ul>
+<li><p>概念：如果一个包含多个业务步骤的操作，被事务管理，那么这些操作要么同时成功，要么同时失败。</p>
+</li>
+<li><p>操作：</p>
+<ul>
+<li>开启事务：start  transcation</li>
+<li>回滚：rollback       </li>
+<li>提交：commit</li>
+</ul>
+</li>
+<li><p>事务提交的两种方式</p>
+<ul>
+<li>手动提交：需要先开启事务，再提交。进行增删改的操作之后，一定要用commit进行提交。Oracle默认手动提交事务。</li>
+<li>自动提交：MySQL数据库中，事务默认自动提交。一条DML语句会自动提交一次事务</li>
+</ul>
+</li>
+<li><p>修改事务的默认提交方式</p>
+<ul>
+<li><p>查看事务的默认提交方式：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select @@autocommit;</span><br><span class="line">-- 1:自动提交</span><br><span class="line">-- 0:手动提交</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改默认提交方式：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set @@autocommit = 0;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-2-事务的四大特征"><a href="#4-2-事务的四大特征" class="headerlink" title="4.2 事务的四大特征"></a>4.2 事务的四大特征</h4><ul>
+<li>原子性：不可分割的最小操作单位，要么同时成功要么同时失败</li>
+<li>持久性：事务一旦提交或者回滚，数据库会持久化的保存数据</li>
+<li>隔离性：多个事物之间相互独立</li>
+<li>一致性：事务操作前后，数据总量不变</li>
+</ul>
+<h4 id="4-3-事务的隔离级别"><a href="#4-3-事务的隔离级别" class="headerlink" title="4.3 事务的隔离级别"></a>4.3 事务的隔离级别</h4><ul>
+<li><p>概念：多个事物之间是隔离、相互独立的。但是如果多个事务操作同一批数据，就会引发一些问题。设置不同 的隔离级别就可以解决这样的问题</p>
+</li>
+<li><p>问题</p>
+<ul>
+<li>脏读：一个事务读取到另外一个事务中没有提交的数据</li>
+<li>不可重复读：在同一个事务中，两次读取到的数据不一样</li>
+<li>幻读：一个事务操作（DML）数据表中所有记录，另一个事务添加了一条数据，那么第一个事务查询不到自己的修改</li>
+</ul>
+</li>
+<li><p>隔离级别</p>
+<ul>
+<li>read uncommited：读未提交的事务<ul>
+<li>产生的问题：脏读，不可重复读，幻读</li>
+</ul>
+</li>
+<li>read commited：读已提交（Oracle默认）<ul>
+<li>产生的问题：不可重复读，幻读</li>
+</ul>
+</li>
+<li>repeatable：可重复读（MySQL默认）<ul>
+<li>产生的问题：幻读</li>
+</ul>
+</li>
+<li><p>serializable：串行化</p>
+<ul>
+<li>不会产生问题</li>
+</ul>
+<p>==隔离级别从小到大安全性越来越高，效率越来越低==</p>
+</li>
+</ul>
+</li>
+<li><p>数据库查询隔离级别</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select @@tx_isolation;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>数据库设置隔离级别</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set global transaction isolation level 隔离级别字符串;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="5-DCL"><a href="#5-DCL" class="headerlink" title="5. DCL"></a>5. DCL</h1><ul>
+<li><p>管理用户</p>
+<ul>
+<li><p>添加用户：</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER &apos;用户名&apos;@&apos;主机名&apos; IDENTIFIED BY &apos;密码&apos;;</span><br></pre></td></tr></table></figure>
+<p>==主机名是  %  的时候代表可以在任意主机上进行登陆==</p>
+</li>
+</ul>
+</li>
+<li><p>删除用户：</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP USER &apos;用户名&apos;@&apos;主机名&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>修改用户密码：</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UPDATE USER SET PASSWORD = PASSWORD(&apos;新密码&apos;) WHERE USER = &apos;用户名&apos;;</span><br><span class="line">SET PASSWORD FOR &apos;用户名&apos;@&apos;主机名&apos; = PASSWORD(&apos;新密码&apos;);</span><br></pre></td></tr></table></figure>
+<p>==mysql中忘记了root的密码？==</p>
+<ul>
+<li>1.cmd–&gt;net stop mysql(需要以管理员的身份运行)</li>
+<li>2.使用无验证方式启动mysql服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqld --skip-grant-tables</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3.然后直接mysql就可以登录成功，在进行修改用户密码操作。之后关闭两个cmd窗口</p>
+</li>
+<li>4.打开任务管理器，找到mysqld服务，手动结束</li>
+<li>5.再次通过管理员的方式打开cmd，启动mysql服务</li>
+<li>6.可以通过新密码进行登陆</li>
+</ul>
+</li>
+<li><p>查询用户：</p>
+<ul>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.切换到mysql数据库</span><br><span class="line">	use mysql;</span><br><span class="line">2.查询user表</span><br><span class="line">	select * from user;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>权限管理</p>
+<ul>
+<li><p>查询权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW GRANTS FOR &apos;用户名&apos;@&apos;主机名&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>授予权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GRANT 权限列表 ON 数据库名.表名 TO &apos;用户名&apos;@&apos;主机名&apos;;</span><br><span class="line"></span><br><span class="line">GRANT ALL ON *.* TO &apos;用户名&apos;@&apos;主机名&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>撤销权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REVOKE 权限列表 ON 数据库名.表名 FROM &apos;用户名&apos;@&apos;主机名&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-copyright"><blockquote><p>原文作者: 小青年</p><p>原文链接: <a href="http://yoursite.com/2019/07/02/mysql2/">http://yoursite.com/2019/07/02/mysql2/</a></p><p>版权声明: 转载请注明出处(必须保留作者署名及链接)</p></blockquote></div><div class="tags"></div><div class="post-share"><div class="social-share"><span>分享到:</span></div></div><div class="post-nav"><a href="/2019/06/30/mysql1/" class="next">MySql知识浅析1</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-多表之间的关系"><span class="toc-text">1. 多表之间的关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-分类"><span class="toc-text">1.1 分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-实现关系"><span class="toc-text">1.2 实现关系</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#2-范式"><span class="toc-text">2. 范式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-概念"><span class="toc-text">2.1 概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-分类"><span class="toc-text">2.2 分类</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-多表查询"><span class="toc-text">3. 多表查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-笛卡尔积"><span class="toc-text">3.1 笛卡尔积</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-内连接查询"><span class="toc-text">3.2 内连接查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-外连接查询"><span class="toc-text">3.3 外连接查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-子查询"><span class="toc-text">3.4 子查询</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-1-子查询的结果是单行单列的"><span class="toc-text">3.4.1 子查询的结果是单行单列的</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-2-子查询的结果是多行单列的"><span class="toc-text">3.4.2 子查询的结果是多行单列的</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-3-子查询的结果是多行多列的"><span class="toc-text">3.4.3 子查询的结果是多行多列的</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-事务"><span class="toc-text">4. 事务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-事务的基本介绍"><span class="toc-text">4.1 事务的基本介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-事务的四大特征"><span class="toc-text">4.2 事务的四大特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-事务的隔离级别"><span class="toc-text">4.3 事务的隔离级别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-DCL"><span class="toc-text">5. DCL</span></a></li></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/07/02/mysql2/">mysql知识浅析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/30/mysql1/">MySql知识浅析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/23/复制多级文件夹/">复制多级文件夹</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/20/IO流/">IO流--字节流</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/20/文件/">File</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/20/递归和文件/">递归和文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/17/正则表达式浅析/">正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/13/集合知识浅析（四）并发修改异常/">并发修改异常</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/内部类/">内部类浅析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/多线程浅析（二）/">多线程浅析（二）--线程通信</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">网站地图</a> |  <a href="/atom.xml">订阅本站</a> |  <a href="/about/">联系博主</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次，本站总访客数:<i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>人</p><p><span> Copyright &copy;<a href="/." rel="nofollow">小青年.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.3"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.3" async></script><link rel="stylesheet" type="text/css" href="/share/css/share.css"><script type="text/javascript" src="/share/js/social-share.js" charset="utf-8"></script><script type="text/javascript" src="/share/js/qrcode.js" charset="utf-8"></script></body></html>
