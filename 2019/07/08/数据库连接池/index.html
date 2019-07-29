@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="几乎所有的事情都具有多面性"><title>数据库连接池浅析 | 向阳成长</title><link rel="stylesheet" type="text/css" href="//fonts.loli.net/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.3"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.3"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">数据库连接池浅析</h1><a id="logo" href="/.">向阳成长</a><p class="description">个人博客</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="搜索"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">数据库连接池浅析</h1><div class="post-meta"><a href="/2019/07/08/数据库连接池/#comments" class="comment-count"></a><p><span class="date">Jul 08, 2019</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><h1 id="数据库连接池"><a href="#数据库连接池" class="headerlink" title="数据库连接池"></a>数据库连接池</h1><ul>
+<li><p>概念：就是一个容器，用来存放数据库连接。当系统没初始化好了之后，容器被创建，容器中会申请一些连接对象(这些连接对象已经和数据库进行了连接)，当用户访问数据库的时候，会自动从容器中获取连接对象，用户访问结束之后，会将连接对象归还给容器</p>
+</li>
+<li><p>好处：</p>
+<ul>
+<li>1.能够节约资源</li>
+<li>2.用户访问更加高效</li>
+</ul>
+</li>
+<li><p>实现：</p>
+<ul>
+<li><p>标准接口：DataSource     javax.sql包下的</p>
+<ul>
+<li><p>方法：</p>
+<p>  获取链接：getConnection()</p>
+<p>  归还链接：如果连接对象Connection是从连接池中获取的，那么调用Connection.close()方法，就不会再关闭连接而是归还链接。</p>
+</li>
+</ul>
+</li>
+<li><p>一般由数据库厂商实现</p>
+<ul>
+<li>1.C3p0</li>
+<li>2.Druid</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="c3p0"><a href="#c3p0" class="headerlink" title="c3p0"></a>c3p0</h2><ul>
+<li>步骤：<ul>
+<li>导入jar包：c3p0-0.9.2.1.jar 和 mchange-commons-java-0.2.3.4</li>
+<li>定义配置文件：<ul>
+<li>名称：c3p0.properties  或者  c3p0-config.xml。</li>
+<li>路径：直接将文件放在src目录下即可。</li>
+</ul>
+</li>
+<li>创建核心对象：数据库连接池对象<ul>
+<li>ComboPooledDataSource</li>
+</ul>
+</li>
+<li>获取链接<ul>
+<li>getConnection</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1.创建数据库连接池对象</span></span><br><span class="line">DataSource dataSource=<span class="keyword">new</span> ComboPooledDataSource();</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取链接对象</span></span><br><span class="line">Connection connection = dataSource.getConnection();</span><br><span class="line"></span><br><span class="line"><span class="comment">//打印</span></span><br><span class="line">System.out.println(connection);</span><br></pre></td></tr></table></figure>
+<h2 id="Durid"><a href="#Durid" class="headerlink" title="Durid"></a>Durid</h2><ul>
+<li>步骤：<ul>
+<li>导入jar包：druid-1.0.9.jar</li>
+<li>定义配置文件：<ul>
+<li>是properties形式的</li>
+<li>可以叫任意名称，可以放在任意目录下</li>
+</ul>
+</li>
+<li>加载配置文件。Properties</li>
+<li>获取数据库连接池对象<ul>
+<li>通过工厂类获取：DruidDataSourceFactory</li>
+</ul>
+</li>
+<li>获取链接<ul>
+<li>getConnection</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//导入jar包</span></span><br><span class="line"><span class="comment">//定义配置文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//利用Properties加载配置文件</span></span><br><span class="line">Properties properties=<span class="keyword">new</span> Properties();</span><br><span class="line">InputStream resourceAsStream = 	      Demo1.class.getClassLoader().getResourceAsStream(<span class="string">"druid.properties"</span>);</span><br><span class="line">properties.load(resourceAsStream);</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取连接池对象</span></span><br><span class="line">DataSource dataSource = 	      DruidDataSourceFactory.createDataSource(properties);</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取链接</span></span><br><span class="line">Connection connection = dataSource.getConnection();</span><br><span class="line">System.out.println(connection);</span><br></pre></td></tr></table></figure>
+</div><div class="post-copyright"><blockquote><p>原文作者: 小青年</p><p>原文链接: <a href="http://yoursite.com/2019/07/08/数据库连接池/">http://yoursite.com/2019/07/08/数据库连接池/</a></p><p>版权声明: 转载请注明出处(必须保留作者署名及链接)</p></blockquote></div><div class="tags"></div><div class="post-share"><div class="social-share"><span>分享到:</span></div></div><div class="post-nav"><a href="/2019/07/12/相对路径随手记（不定期更新）/" class="pre">路径随手记（不定期更新）</a><a href="/2019/07/06/JDBC/" class="next">JDBC知识小结</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据库连接池"><span class="toc-text">数据库连接池</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#c3p0"><span class="toc-text">c3p0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Durid"><span class="toc-text">Durid</span></a></li></ol></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/07/29/乱码问题以及解决方案/">常见乱码问题以及解决方案（不定期更新）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/28/requestAndresponse/">request和response知识点小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/25/分页查询/">分页查询记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/24/Servlet随手小记/">Servlet随手记（不定期更新）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/24/Tomcat随手记/">Tomcat随手小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/12/相对路径随手记（不定期更新）/">路径随手记（不定期更新）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/08/数据库连接池/">数据库连接池浅析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/06/JDBC/">JDBC知识小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/02/mysql2/">mysql知识浅析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/30/mysql1/">MySql知识浅析1</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">网站地图</a> |  <a href="/atom.xml">订阅本站</a> |  <a href="/about/">联系博主</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次，本站总访客数:<i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>人</p><p><span> Copyright &copy;<a href="/." rel="nofollow">小青年.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.3"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.3" async></script><link rel="stylesheet" type="text/css" href="/share/css/share.css"><script type="text/javascript" src="/share/js/social-share.js" charset="utf-8"></script><script type="text/javascript" src="/share/js/qrcode.js" charset="utf-8"></script></body></html>

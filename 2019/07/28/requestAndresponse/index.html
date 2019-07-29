@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="几乎所有的事情都具有多面性"><title>request和response知识点小记 | 向阳成长</title><link rel="stylesheet" type="text/css" href="//fonts.loli.net/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.3"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.3"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">request和response知识点小记</h1><a id="logo" href="/.">向阳成长</a><p class="description">个人博客</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="搜索"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">request和response知识点小记</h1><div class="post-meta"><a href="/2019/07/28/requestAndresponse/#comments" class="comment-count"></a><p><span class="date">Jul 28, 2019</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><h3 id="request"><a href="#request" class="headerlink" title="request"></a>request</h3><p>request对象是由服务器来进行创建的，主要用来获取客户端发送的请求信息。</p>
+<p>由于客户端的请求信息可以划分成请求行、请求头、请求体（get方式有，post方式才有）。</p>
+<h4 id="1-获取请求行（GET-虚拟目录-资源路径-参数-参数值-HTTP-版本）"><a href="#1-获取请求行（GET-虚拟目录-资源路径-参数-参数值-HTTP-版本）" class="headerlink" title="1.获取请求行（GET /虚拟目录/资源路径?参数=参数值    HTTP/版本）"></a>1.获取请求行（GET /虚拟目录/资源路径?参数=参数值    HTTP/版本）</h4><ul>
+<li>获取请求方式：GET<ul>
+<li>String getMethod()</li>
+</ul>
+</li>
+<li>获取虚拟目录：<ul>
+<li>String getContextPath()</li>
+</ul>
+</li>
+<li>获取Servlet路径（资源路径）：<ul>
+<li>String getServletPath()</li>
+</ul>
+</li>
+<li>获取get方式的请求参数：<ul>
+<li>String getQueryString()</li>
+</ul>
+</li>
+<li>获取请求的URI（虚拟目录/资源路径）：<ul>
+<li>String getRequestURI()</li>
+</ul>
+</li>
+<li>获取请求的URL（<a href="http://localhost/day14/demo1）" target="_blank" rel="noopener">http://localhost/day14/demo1）</a>:<ul>
+<li>String getRequestURL()</li>
+</ul>
+</li>
+<li>获取协议以及版本<ul>
+<li>String getProtocol()</li>
+</ul>
+</li>
+<li>获取客户端的IP地址<ul>
+<li>String getRemoteAddr()</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-获取请求头数据"><a href="#2-获取请求头数据" class="headerlink" title="2.获取请求头数据"></a>2.获取请求头数据</h4><ul>
+<li>String getHeader(String name)：通过请求头的名称获取请求头的值</li>
+<li>Enumeration<string>  getHeaderNames()：获取所有的请求头名称</string></li>
+</ul>
+<h4 id="3-获取请求体数据（post方式独有）"><a href="#3-获取请求体数据（post方式独有）" class="headerlink" title="3.获取请求体数据（post方式独有）"></a>3.获取请求体数据（post方式独有）</h4><ul>
+<li>获取流对象：<ul>
+<li>BufferReader getReader()</li>
+<li>ServletInputStream getInputStream()</li>
+</ul>
+</li>
+<li>从流对象中获取数据</li>
+</ul>
+<h4 id="4-其他通用获取功能"><a href="#4-其他通用获取功能" class="headerlink" title="4.其他通用获取功能"></a>4.其他通用获取功能</h4><ul>
+<li>String getParameter(String name)：根据参数名获取参数值</li>
+<li>String getParameterMap(String name)：根据参数名称获取参数值的数据</li>
+<li>Enumeration<string> getParameterNames()：获取所有请求的参数名称</string></li>
+<li>Map&lt;String,String[]&gt; getParameterMap()：获取所有参数的map集合</li>
+</ul>
+<h4 id="5-中文乱码"><a href="#5-中文乱码" class="headerlink" title="5.中文乱码"></a>5.中文乱码</h4><ul>
+<li>get方式在tomcat8已经不存在，被解决了</li>
+<li>post方式：<ul>
+<li>在获取参数之前，设置request的编码request.setCharacterEncoding(“utf-8”)</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-请求转发：一种在服务器内部的资源跳转方式"><a href="#6-请求转发：一种在服务器内部的资源跳转方式" class="headerlink" title="6.请求转发：一种在服务器内部的资源跳转方式"></a>6.请求转发：一种在服务器内部的资源跳转方式</h4><ul>
+<li>先获取请求转发器对象：RequestDispatcher(String path)</li>
+<li>使用请求其对象进行转发：forward(ServletRequest request，ServletResponse response)</li>
+<li>特点：<ul>
+<li>浏览器地址栏路径不发生变化</li>
+<li>只能是转发到当前服务器内部资源</li>
+<li>转发是一次请求</li>
+</ul>
+</li>
+<li>可以通过请求域进行共享数据</li>
+<li>请求转发过程中，使用request域共享数据，实际上数据会保存到request对象中的一个Map集合中</li>
+</ul>
+<h4 id="7-获取ServletContext"><a href="#7-获取ServletContext" class="headerlink" title="7.获取ServletContext"></a>7.获取ServletContext</h4><ul>
+<li>ServletContext getServletContext()</li>
+</ul>
+<h3 id="response"><a href="#response" class="headerlink" title="response"></a>response</h3><p>response主要用来设置响应消息。</p>
+<h4 id="1-设置响应行"><a href="#1-设置响应行" class="headerlink" title="1.设置响应行"></a>1.设置响应行</h4><ul>
+<li>setStatus(int sc)：设置状态码</li>
+</ul>
+<h4 id="2-设置响应头"><a href="#2-设置响应头" class="headerlink" title="2.设置响应头"></a>2.设置响应头</h4><ul>
+<li>setHeader(String name,String value)</li>
+</ul>
+<h4 id="3-设置响应体"><a href="#3-设置响应体" class="headerlink" title="3.设置响应体"></a>3.设置响应体</h4><ul>
+<li>获取输出流<ul>
+<li>PrintWriter getWriter()</li>
+<li>ServletOutputStream getOutputStream()</li>
+</ul>
+</li>
+<li>使用输出流，将数据输出到客户端浏览器</li>
+</ul>
+<h4 id="4-重定向"><a href="#4-重定向" class="headerlink" title="4.重定向"></a>4.重定向</h4><ul>
+<li>设置状态码：response.setStatus(302)</li>
+<li>设置响应头：response.setHeader(“location”,”跳转路径”)</li>
+<li>或者：<ul>
+<li>response.sendRedirect(“跳转路径”);</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>地址栏发生变化</li>
+<li>重定向可以访问其他服务器的资源</li>
+<li>重定向是两次请求，不能使用request对象来共享数据</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-copyright"><blockquote><p>原文作者: 小青年</p><p>原文链接: <a href="http://yoursite.com/2019/07/28/requestAndresponse/">http://yoursite.com/2019/07/28/requestAndresponse/</a></p><p>版权声明: 转载请注明出处(必须保留作者署名及链接)</p></blockquote></div><div class="tags"></div><div class="post-share"><div class="social-share"><span>分享到:</span></div></div><div class="post-nav"><a href="/2019/07/29/乱码问题以及解决方案/" class="pre">常见乱码问题以及解决方案（不定期更新）</a><a href="/2019/07/25/分页查询/" class="next">分页查询记录</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#request"><span class="toc-text">request</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-获取请求行（GET-虚拟目录-资源路径-参数-参数值-HTTP-版本）"><span class="toc-text">1.获取请求行（GET /虚拟目录/资源路径?参数=参数值    HTTP/版本）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-获取请求头数据"><span class="toc-text">2.获取请求头数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-获取请求体数据（post方式独有）"><span class="toc-text">3.获取请求体数据（post方式独有）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-其他通用获取功能"><span class="toc-text">4.其他通用获取功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-中文乱码"><span class="toc-text">5.中文乱码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-请求转发：一种在服务器内部的资源跳转方式"><span class="toc-text">6.请求转发：一种在服务器内部的资源跳转方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-获取ServletContext"><span class="toc-text">7.获取ServletContext</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#response"><span class="toc-text">response</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-设置响应行"><span class="toc-text">1.设置响应行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-设置响应头"><span class="toc-text">2.设置响应头</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-设置响应体"><span class="toc-text">3.设置响应体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-重定向"><span class="toc-text">4.重定向</span></a></li></ol></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/07/29/乱码问题以及解决方案/">常见乱码问题以及解决方案（不定期更新）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/28/requestAndresponse/">request和response知识点小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/25/分页查询/">分页查询记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/24/Servlet随手小记/">Servlet随手记（不定期更新）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/24/Tomcat随手记/">Tomcat随手小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/12/相对路径随手记（不定期更新）/">路径随手记（不定期更新）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/08/数据库连接池/">数据库连接池浅析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/06/JDBC/">JDBC知识小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/07/02/mysql2/">mysql知识浅析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/30/mysql1/">MySql知识浅析1</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">网站地图</a> |  <a href="/atom.xml">订阅本站</a> |  <a href="/about/">联系博主</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次，本站总访客数:<i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>人</p><p><span> Copyright &copy;<a href="/." rel="nofollow">小青年.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.3"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.3" async></script><link rel="stylesheet" type="text/css" href="/share/css/share.css"><script type="text/javascript" src="/share/js/social-share.js" charset="utf-8"></script><script type="text/javascript" src="/share/js/qrcode.js" charset="utf-8"></script></body></html>
