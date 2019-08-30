@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="几乎所有的事情都具有多面性"><title>JQuery知识小记2 | 向阳成长</title><link rel="stylesheet" type="text/css" href="//fonts.loli.net/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.3"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.3"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">JQuery知识小记2</h1><a id="logo" href="/.">向阳成长</a><p class="description">个人博客</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="搜索"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">JQuery知识小记2</h1><div class="post-meta"><a href="/2019/08/12/JQuery_2/#comments" class="comment-count"></a><p><span class="date">Aug 12, 2019</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><h3 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h3><ul>
+<li>隐藏和显示元素<ul>
+<li>show(speed,[easing],[fn])</li>
+<li>hide([speed,[easing],[fn]])</li>
+<li>toggle([speed],[easing],[fn])<ul>
+<li>speed：动画的速度。三个预定义的值(“slow”,”normal”, “fast”)或表示动画时长的毫秒数值(如：1000)</li>
+<li>easing：用来指定切换效果，默认是”swing”，可用参数”linear”</li>
+<li>fn：在动画完成时执行的函数，每个元素执行一次。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>滑动显示和隐藏方式<ul>
+<li>slideDown([speed],[easing],[fn])</li>
+<li>slideUp([speed,[easing],[fn]])</li>
+<li>slideToggle([speed],[easing],[fn])</li>
+</ul>
+</li>
+<li>淡入淡出显示和隐藏方式<ul>
+<li>fadeIn([speed],[easing],[fn])</li>
+<li>fadeOut([speed],[easing],[fn])</li>
+<li>fadeToggle([speed,[easing],[fn]])</li>
+</ul>
+</li>
+</ul>
+<h3 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h3><ul>
+<li><p>JS遍历方式</p>
+<ul>
+<li>for(初始化值;循环结束条件;步长)</li>
+</ul>
+</li>
+<li><p>jq的遍历方式</p>
+<ul>
+<li><p>jquery对象.each(function(index,element){});</p>
+<ul>
+<li><p>index:就是元素在集合中的索引</p>
+</li>
+<li><p>element：就是集合中的每一个元素对象</p>
+</li>
+<li><p>this：集合中的每一个元素对象</p>
+</li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#city li"</span>).each(function (index, element) &#123;   </span><br><span class="line">    alert(index+<span class="string">"---"</span>+$(element).html());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>$.each(object, [callback])</p>
+<ul>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$.each(($(<span class="string">"#city li"</span>)),function () &#123;     </span><br><span class="line">	alert($(<span class="keyword">this</span>).html());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>for..of: jquery 3.0 版本之后提供的方式</p>
+<ul>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (li of $(<span class="string">"#city li"</span>)) &#123;</span><br><span class="line">	alert(li.innerHTML);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="事件绑定"><a href="#事件绑定" class="headerlink" title="事件绑定"></a>事件绑定</h3><ul>
+<li>jquery标准的绑定方式<ul>
+<li>jq对象.事件方法(回调函数)；</li>
+</ul>
+</li>
+</ul>
+<p>==注：如果调用事件方法，不传递回调函数，则会触发浏览器默认行为。==</p>
+<ul>
+<li>on绑定事件/off解除绑定<ul>
+<li>jq对象.on(“事件名称”,回调函数)</li>
+<li>jq对象.off(“事件名称”)：如果off方法不传递任何参数，则将组件上的所有事件全部解绑</li>
+</ul>
+</li>
+<li>事件切换：toggle<ul>
+<li>jq对象.toggle(fn1,fn2…)<ul>
+<li>当单击jq对象对应的组件后，会执行fn1.第二次点击会执行fn2…..</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div class="post-copyright"><blockquote><p>原文作者: 小青年</p><p>原文链接: <a href="http://yoursite.com/2019/08/12/JQuery_2/">http://yoursite.com/2019/08/12/JQuery_2/</a></p><p>版权声明: 转载请注明出处(必须保留作者署名及链接)</p></blockquote></div><div class="tags"></div><div class="post-share"><div class="social-share"><span>分享到:</span></div></div><div class="post-nav"><a href="/2019/08/12/Ajax/" class="pre">Ajax的实现方式</a><a href="/2019/08/11/JQuery_1/" class="next">jquery-1</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#动画"><span class="toc-text">动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遍历"><span class="toc-text">遍历</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事件绑定"><span class="toc-text">事件绑定</span></a></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/08/30/Spring单例模式/">Spring常见设计模式浅析---单例设计模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/29/Spring工厂模式/">Spring常见设计模式浅析--工厂模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/29/Spring学习3/">Spring-AOP小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/26/Spring学习2/">Spring知识小记2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/25/Spring学习1/">Spring知识小记1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/12/redis/">redis&jedis初探</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/12/Json/">JSON</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/12/Ajax/">Ajax的实现方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/12/JQuery_2/">JQuery知识小记2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/11/JQuery_1/">jquery-1</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">网站地图</a> |  <a href="/atom.xml">订阅本站</a> |  <a href="/about/">联系博主</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次，本站总访客数:<i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>人</p><p><span> Copyright &copy;<a href="/." rel="nofollow">小青年.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.3"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.3" async></script><link rel="stylesheet" type="text/css" href="/share/css/share.css"><script type="text/javascript" src="/share/js/social-share.js" charset="utf-8"></script><script type="text/javascript" src="/share/js/qrcode.js" charset="utf-8"></script></body></html>
